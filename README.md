@@ -1,0 +1,5 @@
+- "Main" contains runner code & global variables
+- "SDCard" contains SD card loading & saving code
+- "PMT" contains PMT simulator (actual PMT code needed)
+- "Temp" contains Thermistor simulator (actual Thermistor code needed)
+- "Main_BACKUP" contains all current code in a single file
