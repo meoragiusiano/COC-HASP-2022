@@ -1,6 +1,7 @@
 //// HASP 2022 TESTING CODE ////
+//Authors:
+//Svarun Soda
 
-//Includes
 #include "HASP2022_SDCard.h"
 #include "HASP2022_PMT.h"
 #include "HASP2022_Temp.h"
@@ -8,6 +9,9 @@
 //Pin defined for "Chip Select" on Teensy 4.0
 #define PIN_CS 10
 //DEFAULT: 10
+//Pin defined for PMT analog input on Teensy 4.0
+#define PIN_PMT 20
+//DEFAULT: 20
 
 //Enables SlowSave mode
 //FALSE (DEFAULT) - Program will only save the currently-opened data file after it crosses the Line Limit (faster)
@@ -41,6 +45,7 @@ bool NeedNewFile = true;
 void setup() {
   Serial.begin(9600);
   pinMode(PIN_CS, OUTPUT);
+  pinMode(PIN_PMT, INPUT);
   if (!SDCheckMode) OpenSD();
 }
 
@@ -53,7 +58,8 @@ void loop() {
 
   int currPMTHit = 0;
   int currTemp = 0;
-  currPMTHit = SimulatePMT();
+  //currPMTHit = SimulatePMT();
+  currPMTHit = ReadPMT(PIN_PMT);
   currTemp = SimulateThermistor();
   if (currPMTHit > PMTHitThreshold)
   {

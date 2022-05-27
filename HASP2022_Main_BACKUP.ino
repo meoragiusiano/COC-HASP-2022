@@ -3,6 +3,7 @@
 #include <SD.h>
 
 #define PIN_CS 10
+#define PIN_PMT 20
 
 bool SlowSaveMode = false;
 bool SDCheckMode = false;
@@ -25,11 +26,13 @@ void OpenDataFile();
 void CloseDataFile();
 void OpenSD();
 long SimulateThermistor();
+int ReadPMT(const int);
 int SimulatePMT();
 
 void setup() {
   Serial.begin(9600);
   pinMode(PIN_CS, OUTPUT);
+  pinMode(PIN_PMT, INPUT);
   if (!SDCheckMode) OpenSD();
 }
 
@@ -42,7 +45,8 @@ void loop() {
 
   int currPMTHit = 0;
   int currTemp = 0;
-  currPMTHit = SimulatePMT();
+  //currPMTHit = SimulatePMT();
+  currPMTHit = ReadPMT(PIN_PMT);
   currTemp = SimulateThermistor();
   if (currPMTHit > PMTHitThreshold)
   {
@@ -168,13 +172,13 @@ void CloseDataFile() {
 }
 
 long SimulateThermistor() {
-  long value = random(50, 200);
-  
-  return value;
+  return random(50, 200);
+}
+
+int ReadPMT(const int pin) {
+  return analogRead(pin);
 }
 
 int SimulatePMT() {
-  int value = random(5, 100);
-  
-  return value;
+  return random(5, 100);
 }

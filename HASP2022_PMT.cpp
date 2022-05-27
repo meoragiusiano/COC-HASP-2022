@@ -1,7 +1,9 @@
 #include "HASP2022_PMT.h"
 
+int ReadPMT(const int pin) {
+  return analogRead(pin);
+}
+
 int SimulatePMT() {
-  int value = random(5, 100);
-  
-  return value;
+  return random(5, 100);
 }
