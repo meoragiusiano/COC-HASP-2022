@@ -58,6 +58,7 @@ void loop() {
   {
     OpenSD();
     if (!SDOpen) return;
+    FirstSDCheck = false;
   }
 
   int currPMTHit = 0;
