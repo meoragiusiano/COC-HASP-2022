@@ -2,8 +2,8 @@
 
 #include <SD.h>
 
-int PIN_CS = 10;  //Pin defined for "Chip Select" on Teensy 4.0
-int PIN_PMT = 20; //Pin defined for PMT analog input on Teensy 4.0
+int PIN_CS = 10;  //Pin defined for "Chip Select" on Teensy 4.1
+int PIN_PMT = 20; //Pin defined for PMT analog input on Teensy 4.1
 
 bool SlowSaveMode = false;
 //FALSE (DEFAULT) - Program will only save the currently-opened data file after it crosses the Line Limit (faster)
@@ -32,7 +32,7 @@ String FileExt = ".txt";
 File CurrFile;
 int FilesNum = 0;
 int CurrLines = 0;
-int SCKRate = 1;
+int SCKRate = 0;
 bool SDOpen = false;
 bool FileOpen = false;
 bool NeedNewFile = true;
