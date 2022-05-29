@@ -11,7 +11,7 @@ extern int TimeOffset;
 extern String FileName;
 extern String FileExt;
 
-extern SdFat SDCard;
+extern SdExFat SDCard;
 extern ExFatFile CurrFile;
 extern int FilesNum;
 extern int CurrLines;

@@ -31,11 +31,11 @@ String FileExt = ".txt";
 //DEFAULT: ".txt"
 
 //Rest of global variables (do not change)
-SdFat SDCard;
+SdExFat SDCard;
 ExFatFile CurrFile;
 int FilesNum = 0;
 int CurrLines = 0;
-int SCKRate = 1;
+int SCKRate = 0;
 bool SDOpen = false;
 bool FileOpen = false;
 bool NeedNewFile = true;
