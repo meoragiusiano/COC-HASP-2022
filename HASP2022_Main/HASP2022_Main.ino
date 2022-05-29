@@ -4,8 +4,8 @@
 #include "HASP2022_PMT.h"
 #include "HASP2022_Temp.h"
 
-int PIN_CS = 10;  //Pin defined for "Chip Select" on Teensy 4.0
-int PIN_PMT = 20; //Pin defined for PMT analog input on Teensy 4.0
+int PIN_CS = 10;  //Pin defined for "Chip Select" on Teensy 4.1
+int PIN_PMT = 20; //Pin defined for PMT analog input on Teensy 4.1
 
 bool SlowSaveMode = false;
 //FALSE (DEFAULT) - Program will only save the currently-opened data file after it crosses the Line Limit (faster)
