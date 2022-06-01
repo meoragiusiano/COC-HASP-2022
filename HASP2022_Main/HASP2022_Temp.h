@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 
+long ReadTemp(int);
 long SimulateThermistor();
 
 #endif
