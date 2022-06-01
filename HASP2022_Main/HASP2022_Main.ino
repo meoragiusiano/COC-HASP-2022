@@ -11,7 +11,7 @@ int PINS_TEMP_INSIDE[] = {26, 27};
 int NumInTempPins = 2;
 //int NumOutTempPins = 2;
 
-bool SlowSaveMode = true;
+bool SlowSaveMode = false;
 //FALSE (DEFAULT) - Program will only save the currently-opened data file after it crosses the Line Limit (faster)
 //TRUE - Program will save the currently-opened data file after every iteration (slower)
 bool SDCheckMode = false;
@@ -20,7 +20,7 @@ bool SDCheckMode = false;
 bool FirstSDCheck = true;
 //FALSE - At the start, program will only run begin() function of the SD card in the setup() function
 //TRUE (DEFAULT) - At the start, program will keep trying to open the SD card until it is successfully opened
-bool FileCheckMode = true;
+bool FileCheckMode = false;
 //FALSE (DEFAULT) - Upon attempting to create a new data file, program will not check whether there already is a file with the same name on the SD card
 //TRUE - Upon attempting to create a new data file, program will check whether there is already a file with the same name on the SD card, and will attempt to delete it if it's present prior to creating the new file
 int LineLimit = 1000000;
