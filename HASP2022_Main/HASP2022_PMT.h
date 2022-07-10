@@ -4,6 +4,5 @@
 #include "Arduino.h"
 
 int ReadPMT();
-int SimulatePMT();
 
 #endif

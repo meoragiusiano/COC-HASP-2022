@@ -3,6 +3,6 @@
 
 #include "Arduino.h"
 
-String ReadTimestamp();
-void Downlink();
+void SendDownlink(String);
 
+#endif

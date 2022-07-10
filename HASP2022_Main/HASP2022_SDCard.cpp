@@ -7,18 +7,16 @@ extern bool SDCheckMode;
 extern bool FileCheckMode;
 extern int LineLimit;
 extern int PMTHitThreshold;
-extern int TimeOffset;
 extern String FileName;
 extern String FileExt;
 
-extern SdExFat SDCard;
-extern ExFatFile CurrFile;
+extern File CurrFile;
 extern int FilesNum;
 extern int CurrLines;
-extern int SCKRate;
 extern bool SDOpen;
 extern bool FileOpen;
 extern bool NeedNewFile;
+extern long ElapsedSeconds;
 
 void SaveData(String data) {
   if (!FileOpen) 
@@ -35,18 +33,19 @@ void SaveData(String data) {
   WriteDataFile(data);
   CurrLines++;
 
-  if (SlowSaveMode) CloseDataFile();
+  if (SlowSaveMode) 
+    CloseDataFile();
   if (CurrLines >= LineLimit)
   {
     NeedNewFile = true;
-    if (!SlowSaveMode) CloseDataFile();
+    if (!SlowSaveMode) 
+      CloseDataFile();
   }
 }
 
 void WriteDataFile(String data) {
   int dataLength = data.length() + 1;
-  long elapsedSeconds = (millis() / 1000) + TimeOffset;
-  String timeStr = String(elapsedSeconds);
+  String timeStr = String(ElapsedSeconds);
   int timeLength = timeStr.length() + 1; 
   
   if ((dataLength < 100) && (timeLength < 100))
@@ -72,7 +71,8 @@ void WriteDataFile(String data) {
 }
 
 void OpenDataFile() {
-  if (NeedNewFile) FilesNum++;
+  if (NeedNewFile) 
+    FilesNum++;
   
   String currName = FileName;
   currName.concat(FilesNum);
@@ -87,9 +87,9 @@ void OpenDataFile() {
     buff[nameLength - 1] = '\0';
     if ((NeedNewFile) && (FileCheckMode))
     {
-      if (SDCard.exists(buff) == 1) 
+      if (SD.exists(buff) == 1) 
       {
-        if (SDCard.remove(buff) == 1)
+        if (SD.remove(buff) == 1)
         {
           Serial.print("Deleted existing data file #");
           Serial.print(FilesNum);
@@ -105,12 +105,13 @@ void OpenDataFile() {
         }
       }
     }
-    CurrFile.open(buff, FILE_WRITE);
+    CurrFile = SD.open(buff, FILE_WRITE);
 
     if ((SDCheckMode) && (!CurrFile))
     {
       Serial.println("Unable to open data file (SD full or disconnected)!");
-      if (NeedNewFile) FilesNum--;
+      if (NeedNewFile)
+        FilesNum--;
       
       return;
     }
@@ -125,6 +126,7 @@ void OpenDataFile() {
       CurrFile.write(" --------\n\n");
       CurrLines = 0;
       NeedNewFile = false;
+      
       Serial.print("Created new data file #");
       Serial.print(FilesNum);
       Serial.println("!");
@@ -137,7 +139,7 @@ void OpenDataFile() {
 }
 
 void OpenSD() {
-  if (SDCard.begin(PIN_CS, SCKRate) == 1) 
+  if (SD.begin(PIN_CS) == 1) 
   {
     SDOpen = true;
     Serial.println("SD opened successfully!");

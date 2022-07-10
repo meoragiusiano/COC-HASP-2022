@@ -3,13 +3,12 @@
 #include "HASP2022_SDCard.h"
 #include "HASP2022_PMT.h"
 #include "HASP2022_Temp.h"
+#include "HASP2022_Downlink.h"
 
-int PIN_CS = 10;  //Pin defined for "Chip Select" on Teensy 4.1
-int PIN_PMT = 20; //Pin defined for PMT analog input on Teensy 4.1
-int PINS_TEMP_INSIDE[] = {26, 27};
-//int PINS_TEMP_OUTSIDE[] = {24, 25};
-int NumInTempPins = 2;
-//int NumOutTempPins = 2;
+int PIN_CS = BUILTIN_SDCARD;
+int PIN_PMT = 20;
+int PINS_TEMP_INSIDE[] = {22, 23};
+int PINS_TEMP_OUTSIDE[] = {35, 36};
 
 bool SlowSaveMode = false;
 //FALSE (DEFAULT) - Program will only save the currently-opened data file after it crosses the Line Limit (faster)
@@ -24,61 +23,70 @@ bool FileCheckMode = false;
 //FALSE (DEFAULT) - Upon attempting to create a new data file, program will not check whether there already is a file with the same name on the SD card
 //TRUE - Upon attempting to create a new data file, program will check whether there is already a file with the same name on the SD card, and will attempt to delete it if it's present prior to creating the new file
 int LineLimit = 1000000;
-//DEFAULT: 1000000
 int PMTHitThreshold = 0;
-//Defines the threshold above which the data from the PMT will be written to the data file
+int DownlinkInterval = 900;
 int TimeOffset = 0;
-//Increments the timestamp in the data files by this amnount
 String FileName = "COC_HASP2022_DataFile_";
-//[prefix + file number + suffix] HAS to be smaller than the char "buff" present in the saving function!
 String FileExt = ".txt";
-//DEFAULT: ".txt"
 
-//Rest of global variables (do not change)
-SdExFat SDCard;
-ExFatFile CurrFile;
+File CurrFile;
 long ThermResistance = 10000;
 int FilesNum = 0;
 int CurrLines = 0;
-int SCKRate = 0;
 bool SDOpen = false;
 bool FileOpen = false;
 bool NeedNewFile = true;
+bool canSendDownlink = false;
+long ElapsedSeconds;
 
 void setup() {
   Serial.begin(9600);
   pinMode(PIN_CS, OUTPUT);
   pinMode(PIN_PMT, INPUT);
-  for (int i = 0; i < NumInTempPins; i++) 
-  {
+  for (int i = 0; i < 2; i++)
     pinMode(PINS_TEMP_INSIDE[i], INPUT);
-  }
-  /*for (int i = 0; i < NumOutTempPins; i++) 
-  {
+  for (int i = 0; i < 2; i++)
     pinMode(PINS_TEMP_OUTSIDE[i], INPUT);
-  }*/
-  if (!FirstSDCheck) OpenSD();
+  if (!FirstSDCheck)
+    OpenSD();
 }
 
 void loop() {
   if ((SDCheckMode || FirstSDCheck) && (!SDOpen))
   {
     OpenSD();
-    if (!SDOpen) return;
+    if (!SDOpen)
+      return;
     FirstSDCheck = false;
   }
 
-  int currPMTHit = 0;
-  long currTemp = 0;
-  //currPMTHit = SimulatePMT();
-  currPMTHit = ReadPMT();
-  //currTemp = SimulateThermistor();
-  currTemp = ReadTemp(0);
+  ElapsedSeconds = (millis() / 1000) + TimeOffset;
+  int currPMTHit = ReadPMT();
+  long currInsideTemp = ReadTemp(0);
+  long currOutsideTemp = ReadTemp(1);
+  String data;
+
   if (currPMTHit > PMTHitThreshold)
   {
     String data = String(currPMTHit);
     data.concat("\t- ");
-    data.concat(String(currTemp));
+    data.concat(String(currInsideTemp));
+    data.concat("\t- ");
+    data.concat(String(currOutsideTemp));
     SaveData(data);
   }
+
+  if (((ElapsedSeconds % DownlinkInterval) == 0) && (!canSendDownlink))
+  {
+    data = "- 0\t- ";
+    data.concat(String(FilesNum));
+    data.concat("\t- ");
+    data.concat(String(currPMTHit));
+    data.concat("\n");
+    SendDownlink(data);
+
+    canSendDownlink = true;
+  }
+  else if ((ElapsedSeconds % DownlinkInterval) != 0)
+    canSendDownlink = false;
 }

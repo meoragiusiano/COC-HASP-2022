@@ -2,7 +2,7 @@
 #define _HASP2022_SDCard_h_
 
 #include "Arduino.h"
-#include <SdFat.h>
+#include <SD.h>
 
 void SaveData(String);
 void WriteDataFile(String);

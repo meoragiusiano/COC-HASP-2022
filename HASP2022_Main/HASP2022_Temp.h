@@ -4,6 +4,6 @@
 #include "Arduino.h"
 
 long ReadTemp(int);
-long SimulateThermistor();
+long GetTemp(int[2]);
 
 #endif
