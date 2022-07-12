@@ -2,27 +2,27 @@
 
 extern int PIN_CS;
 
-extern bool SlowSaveMode;
-extern bool SDCheckMode;
-extern bool FileCheckMode;
+extern bool SaveFilesAlways;
+extern bool CheckSDAlways;
+extern bool DeleteFiles;
 extern int LineLimit;
 extern int PMTHitThreshold;
 extern String FileName;
 extern String FileExt;
 
 extern File CurrFile;
+extern long ElapsedSeconds;
 extern int FilesNum;
 extern int CurrLines;
 extern bool SDOpen;
 extern bool FileOpen;
 extern bool NeedNewFile;
-extern long ElapsedSeconds;
 
 void SaveData(String data) {
   if (!FileOpen) 
   {
     OpenDataFile();
-    if ((SDCheckMode) && (!FileOpen)) 
+    if ((CheckSDAlways) && (!FileOpen)) 
     {
       SDOpen = false;
       
@@ -33,12 +33,12 @@ void SaveData(String data) {
   WriteDataFile(data);
   CurrLines++;
 
-  if (SlowSaveMode) 
+  if (SaveFilesAlways) 
     CloseDataFile();
   if (CurrLines >= LineLimit)
   {
     NeedNewFile = true;
-    if (!SlowSaveMode) 
+    if (!SaveFilesAlways) 
       CloseDataFile();
   }
 }
@@ -85,7 +85,7 @@ void OpenDataFile() {
     
     currName.toCharArray(buff, nameLength);
     buff[nameLength - 1] = '\0';
-    if ((NeedNewFile) && (FileCheckMode))
+    if ((NeedNewFile) && (DeleteFiles))
     {
       if (SD.exists(buff) == 1) 
       {
@@ -107,7 +107,7 @@ void OpenDataFile() {
     }
     CurrFile = SD.open(buff, FILE_WRITE);
 
-    if ((SDCheckMode) && (!CurrFile))
+    if ((CheckSDAlways) && (!CurrFile))
     {
       Serial.println("Unable to open data file (SD full or disconnected)!");
       if (NeedNewFile)

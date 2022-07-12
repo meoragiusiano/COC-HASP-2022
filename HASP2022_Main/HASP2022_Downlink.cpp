@@ -1,7 +1,7 @@
 #include "HASP2022_Downlink.h"
 
 void SendDownlink(String data) {
-  String dataPrint = "DOWNLINK: ";
+  String dataPrint = "COC DOWNLINK: ";
   dataPrint.concat(data);
   
   Serial.print(dataPrint);
