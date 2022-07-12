@@ -3,4 +3,3 @@
 - "PMT" contains PMT code
 - "Temp" contains Thermistor code
 - "Downlink" contains Downlink code
-- "Main_BACKUP" contains all current code in a single file
