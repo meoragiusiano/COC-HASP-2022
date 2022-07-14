@@ -34,10 +34,11 @@ long ElapsedSeconds = 0;
 long ThermResistance = 10000;
 int FilesNum = 0;
 int CurrLines = 0;
+int PMTHits = 0;
 bool SDOpen = false;
 bool FileOpen = false;
 bool NeedNewFile = true;
-bool canSendDownlink = false;
+bool CanSendDownlink = false;
 
 void setup() {
   Serial.begin(9600);
@@ -78,19 +79,19 @@ void loop() {
     data.concat("\t- ");
     data.concat(String(currOutsideTemp));
     SaveData(data);
+    PMTHits++;
   }
-
-  if (((ElapsedSeconds % DownlinkInterval) == 0) && (!canSendDownlink))
+  if (((ElapsedSeconds % DownlinkInterval) == 0) && (!CanSendDownlink))
   {
     data = "- 0\t- ";
     data.concat(String(FilesNum));
     data.concat("\t- ");
-    data.concat(String(currPMTHit));
+    data.concat(String(PMTHits));
     data.concat("\n");
     SendDownlink(data);
-
-    canSendDownlink = true;
+    PMTHits = 0;
+    CanSendDownlink = true;
   }
   else if ((ElapsedSeconds % DownlinkInterval) != 0)
-    canSendDownlink = false;
+    CanSendDownlink = false;
 }
