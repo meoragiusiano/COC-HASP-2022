@@ -8,6 +8,8 @@ void SaveData(String);
 void WriteDataFile(String);
 void OpenDataFile();
 void CloseDataFile();
+bool CheckSD();
 void OpenSD();
+void PrintSDStatus();
 
 #endif

@@ -4,6 +4,7 @@ extern int PIN_CS;
 
 extern bool SaveFilesAlways;
 extern bool CheckSDAlways;
+extern bool CheckSDInitially;
 extern bool DeleteFiles;
 extern int LineLimit;
 extern int PMTHitThreshold;
@@ -14,17 +15,17 @@ extern File CurrFile;
 extern long ElapsedSeconds;
 extern int FilesNum;
 extern int CurrLines;
-extern bool SDOpen;
-extern bool FileOpen;
+extern bool SDOpenStatus;
+extern bool FileOpenStatus;
 extern bool NeedNewFile;
 
 void SaveData(String data) {
-  if (!FileOpen) 
+  if (!FileOpenStatus) 
   {
     OpenDataFile();
-    if ((CheckSDAlways) && (!FileOpen)) 
+    if ((CheckSDAlways) && (!FileOpenStatus)) 
     {
-      SDOpen = false;
+      SDOpenStatus = false;
       
       return;
     }
@@ -66,7 +67,6 @@ void WriteDataFile(String data) {
   else
   {
     CurrFile.write("Unable to write data (data exceeded the buffer)!\n");
-    //Serial.println("Unable to write data (data exceeded the buffer)!");
   }
 }
 
@@ -75,8 +75,8 @@ void OpenDataFile() {
     FilesNum++;
   
   String currName = FileName;
-  currName.concat(FilesNum);
-  currName.concat(FileExt);
+  currName += FilesNum;
+  currName += FileExt;
   int nameLength = currName.length() + 1;
   
   if (nameLength < 100)
@@ -100,8 +100,6 @@ void OpenDataFile() {
           Serial.print("Unable to delete existing data file #");
           Serial.print(FilesNum);
           Serial.println("!");
-
-          //return;
         }
       }
     }
@@ -116,7 +114,7 @@ void OpenDataFile() {
       return;
     }
 
-    FileOpen = true;
+    FileOpenStatus = true;
     if (NeedNewFile)
     {
       CurrFile.write("-------- HASP 2022 - College of the Canyons - DataFile #");
@@ -138,20 +136,37 @@ void OpenDataFile() {
   }
 }
 
-void OpenSD() {
-  if (SD.begin(PIN_CS) == 1) 
-  {
-    SDOpen = true;
-    Serial.println("SD opened successfully!");
-  }
-  else
-  {
-    SDOpen = false;
-    Serial.println("SD open failed!");
-  }
-}
-
 void CloseDataFile() {
   CurrFile.close();
-  FileOpen = false;
+  FileOpenStatus = false;
+}
+
+bool CheckSD() {
+  if (CheckSDAlways || CheckSDInitially)
+  {
+    bool prevSDStatus = SDOpenStatus;
+    OpenSD();
+    if (!SDOpenStatus) 
+    {
+      PrintSDStatus();
+      
+      return false;
+    }
+    else
+    {
+      if (!prevSDStatus)
+        PrintSDStatus();
+    }
+    CheckSDInitially = false;
+  }
+
+  return true;
+}
+
+void OpenSD() {
+  SD.begin(PIN_CS) ? SDOpenStatus = true : SDOpenStatus = false;
+}
+
+void PrintSDStatus() {
+  SDOpenStatus ? Serial.println("SD opened successfully!") : Serial.println("SD open failed!");
 }
