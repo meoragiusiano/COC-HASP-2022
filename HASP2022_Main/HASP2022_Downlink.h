@@ -3,6 +3,8 @@
 
 #include "Arduino.h"
 
+void CheckDownlink();
 void SendDownlink(String);
+String ByteString(int);
 
 #endif

@@ -3,5 +3,5 @@
 extern int PIN_PMT;
 
 int ReadPMT() {
-  return digitalRead(PIN_PMT);
+  return analogRead(PIN_PMT);
 }

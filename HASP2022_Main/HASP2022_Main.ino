@@ -23,8 +23,8 @@ bool DeleteFiles = false;
 //FALSE (DEFAULT) - Upon attempting to create a new data file, program will not check whether there already is a file with the same name on the SD card
 //TRUE - Upon attempting to create a new data file, program will check whether there is already a file with the same name on the SD card, and will attempt to delete it if it's present prior to creating the new file
 int LineLimit = 1000000;
-int PMTHitThreshold = -1;
-int DownlinkInterval = 10;
+int PMTHitThreshold = 10;
+int DownlinkInterval = 900;
 int TimeOffset = 0;
 String FileName = "COC_HASP2022_DataFile_";
 String FileExt = ".txt";
@@ -42,6 +42,7 @@ bool CanSendDownlink = false;
 
 void setup() {
   Serial.begin(9600);
+  Serial5.begin(9600);
   pinMode(PIN_CS, OUTPUT);
   pinMode(PIN_PMT, INPUT);
   for (int i = 0; i < 2; i++)
@@ -53,6 +54,7 @@ void setup() {
 }
 
 void loop() {
+  CheckDownlink();
   if ((CheckSDAlways || CheckSDInitially) && (!SDOpen))
   {
     OpenSD();
@@ -60,38 +62,17 @@ void loop() {
       return;
     CheckSDInitially = false;
   }
-
-  int currPMTHit = 0;
-  long currInsideTemp = 0;
-  long currOutsideTemp = 0;
-  String data = "";
   
   ElapsedSeconds = (millis() / 1000) + TimeOffset;
-  currPMTHit = ReadPMT();
-  currInsideTemp = ReadTemp(0);
-  currOutsideTemp = ReadTemp(1);
+  int currPMTHit = ReadPMT();
 
   if (currPMTHit > PMTHitThreshold)
   {
-    data = String(currPMTHit);
+    String data = String(currPMTHit);
     data.concat("\t- ");
-    data.concat(String(currInsideTemp));
+    data.concat(String(ReadTemp(0)));
     data.concat("\t- ");
-    data.concat(String(currOutsideTemp));
+    data.concat(String(ReadTemp(1)));
     SaveData(data);
-    PMTHits++;
   }
-  if (((ElapsedSeconds % DownlinkInterval) == 0) && (!CanSendDownlink))
-  {
-    data = "- 0\t- ";
-    data.concat(String(FilesNum));
-    data.concat("\t- ");
-    data.concat(String(PMTHits));
-    data.concat("\n");
-    SendDownlink(data);
-    PMTHits = 0;
-    CanSendDownlink = true;
-  }
-  else if ((ElapsedSeconds % DownlinkInterval) != 0)
-    CanSendDownlink = false;
 }
