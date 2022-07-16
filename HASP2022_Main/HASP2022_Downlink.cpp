@@ -27,15 +27,8 @@ void CheckDownlink() {
 }
 
 void SendDownlink(String data) {
-  String dataPrint = "DOWNLINK: " + data;
-  
-  Serial.print(dataPrint);
+  Serial.print("DOWNLINK: " + data);
   Serial5.print(data);
-
-  //char buff[100];
-  //dataPrint.toCharArray(buff, dataPrint.length() + 1);
-  //buff[dataPrint.length() - 1] = '\0';
-  //Serial5.write(buff);
 }
 
 String ByteString(int num) {

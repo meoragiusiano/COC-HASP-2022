@@ -2,8 +2,6 @@
 
 extern int PIN_CS;
 
-extern bool SaveFilesAlways;
-extern bool CheckSDAlways;
 extern bool CheckSDInitially;
 extern bool DeleteFiles;
 extern int LineLimit;
@@ -20,27 +18,16 @@ extern bool FileOpenStatus;
 extern bool NeedNewFile;
 
 void SaveData(String data) {
-  if (!FileOpenStatus) 
-  {
+  if (!FileOpenStatus)
     OpenDataFile();
-    if ((CheckSDAlways) && (!FileOpenStatus)) 
-    {
-      SDOpenStatus = false;
-      
-      return;
-    }
-  }
 
   WriteDataFile(data);
   CurrLines++;
 
-  if (SaveFilesAlways) 
-    CloseDataFile();
   if (CurrLines >= LineLimit)
   {
+    CloseDataFile();
     NeedNewFile = true;
-    if (!SaveFilesAlways) 
-      CloseDataFile();
   }
 }
 
@@ -85,34 +72,12 @@ void OpenDataFile() {
     
     currName.toCharArray(buff, nameLength);
     buff[nameLength - 1] = '\0';
-    if ((NeedNewFile) && (DeleteFiles))
+    if ((DeleteFiles) && (NeedNewFile))
     {
       if (SD.exists(buff) == 1) 
-      {
-        if (SD.remove(buff) == 1)
-        {
-          Serial.print("Deleted existing data file #");
-          Serial.print(FilesNum);
-          Serial.println("!");
-        }
-        else
-        {
-          Serial.print("Unable to delete existing data file #");
-          Serial.print(FilesNum);
-          Serial.println("!");
-        }
-      }
+        SD.remove(buff);
     }
     CurrFile = SD.open(buff, FILE_WRITE);
-
-    if ((CheckSDAlways) && (!CurrFile))
-    {
-      Serial.println("Unable to open data file (SD full or disconnected)!");
-      if (NeedNewFile)
-        FilesNum--;
-      
-      return;
-    }
 
     FileOpenStatus = true;
     if (NeedNewFile)
@@ -142,7 +107,7 @@ void CloseDataFile() {
 }
 
 bool CheckSD() {
-  if (CheckSDAlways || CheckSDInitially)
+  if (CheckSDInitially)
   {
     bool prevSDStatus = SDOpenStatus;
     OpenSD();

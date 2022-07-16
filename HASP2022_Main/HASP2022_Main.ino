@@ -10,21 +10,15 @@ int PIN_PMT = 20;
 int PINS_TEMP_INSIDE[] = {22, 23};
 int PINS_TEMP_OUTSIDE[] = {35, 36};
 
-bool SaveFilesAlways = false;
-//FALSE (DEFAULT) - Program will only save the currently-opened data file after it crosses the Line Limit (faster)
-//TRUE - Program will save the currently-opened data file after every iteration (slower)
-bool CheckSDAlways = false;
-//FALSE (DEFAULT) - During runtime, program will never check whether the SD is actually connected, and will just keep attempting to save to it regardless
-//TRUE - During runtime, program will check whether the SD is still connected every time the currently-opened data file is saved, will halt the saving process if it detects the SD is disconnected, and resume once it gets recconected
 bool CheckSDInitially = true;
-//FALSE - At the start, program will only run begin() function of the SD card in the setup() function
+//FALSE - At the start, program will only try to open the SD card once
 //TRUE (DEFAULT) - At the start, program will keep trying to open the SD card until it is successfully opened
 bool DeleteFiles = false;
 //FALSE (DEFAULT) - Upon attempting to create a new data file, program will not check whether there already is a file with the same name on the SD card
 //TRUE - Upon attempting to create a new data file, program will check whether there is already a file with the same name on the SD card, and will attempt to delete it if it's present prior to creating the new file
 int LineLimit = 1000000;
-int PMTHitThreshold = 2;
-int DownlinkInterval = 5;
+int PMTHitThreshold = 10;
+int DownlinkInterval = 900;
 int TimeOffset = 0;
 String FileName = "COC_HASP2022_DataFile_";
 String FileExt = ".txt";
