@@ -55,14 +55,14 @@ void loop() {
   CheckDownlink();
   int currPMTHit = ReadPMT();
 
-  if (CheckSD() && (currPMTHit > PMTHitThreshold))
-  {
+  if (CheckSD()) {
     String data = String(currPMTHit);
     data += "\t- ";
     data += String(ReadTemp(0));
     data += "\t- ";
     data += String(ReadTemp(1));
     SaveData(data);
-    PMTHits++;
   }
+  if (currPMTHit > PMTHitThreshold)
+    PMTHits++;
 }
