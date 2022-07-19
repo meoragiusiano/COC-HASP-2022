@@ -7,8 +7,13 @@ void setup() {
 void loop() {
   if (Serial1.available() > 0)
   {
-    String incoming = "";
-    incoming = Serial1.readString();
-    Serial.println("Recieving: " + incoming);
+    int incoming = Serial1.read();
+    Serial.print("Recieving: ");
+    Serial.print(incoming, DEC);
+    Serial.print(", ");
+    Serial.print(incoming, HEX);
+    Serial.print(", ");
+    Serial.print(char(incoming));
+    Serial.println(".");
   }
 }
