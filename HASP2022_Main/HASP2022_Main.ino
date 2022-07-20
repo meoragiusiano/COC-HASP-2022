@@ -55,7 +55,8 @@ void loop() {
   CheckDownlink();
   int currPMTHit = ReadPMT();
 
-  if (CheckSD()) {
+  if (CheckSD()) 
+  {
     String data = String(currPMTHit);
     data += "\t- ";
     data += String(ReadTemp(0));
