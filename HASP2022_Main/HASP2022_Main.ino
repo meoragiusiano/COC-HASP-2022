@@ -17,7 +17,6 @@ bool DeleteFiles = false;
 //FALSE (DEFAULT) - Upon attempting to create a new data file, program will not check whether there already is a file with the same name on the SD card
 //TRUE - Upon attempting to create a new data file, program will check whether there is already a file with the same name on the SD card, and will attempt to delete it if it's present prior to creating the new file
 int LineLimit = 1000000;
-int PMTHitThreshold = 10;
 int DownlinkInterval = 900;
 int TimeOffset = 0;
 String FileName = "COC_HASP2022_DataFile_";
@@ -53,17 +52,22 @@ void setup() {
 void loop() {
   ElapsedSeconds = (millis() / 1000) + TimeOffset;
   CheckDownlink();
-  int currPMTHit = ReadPMT();
+  
+  int PMTHitDigital = ReadPMTDigital();
+  int PMTHitAnalog = ReadPMTAnalog();
 
-  if (CheckSD()) 
+  if (CheckSD())
   {
-    String data = String(currPMTHit);
+    String data = "- ";
+    data += String(PMTHitDigital);
+    data += "\t- ";
+    data += String(PMTHitAnalog);
     data += "\t- ";
     data += String(ReadTemp(0));
     data += "\t- ";
     data += String(ReadTemp(1));
     SaveData(data);
   }
-  if (currPMTHit > PMTHitThreshold)
+  if (PMTHitDigital == 1)
     PMTHits++;
 }

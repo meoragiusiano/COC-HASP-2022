@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 
-int ReadPMT();
+int ReadPMTDigital();
+int ReadPMTAnalog();
 
 #endif

@@ -86,7 +86,7 @@ void OpenDataFile() {
       String fileNumStr = String(FilesNum);
       fileNumStr.toCharArray(buff, fileNumStr.length() + 1);
       CurrFile.write(buff);
-      CurrFile.write(" --------\n\n");
+      CurrFile.write(" --------\n---- (PMT Digital, PMT Analog, Temperature Inside, Temperature Outside, Timestamp) ----\n\n");
       CurrLines = 0;
       NeedNewFile = false;
       
