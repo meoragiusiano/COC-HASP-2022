@@ -1,5 +1,6 @@
 #include "HASP2022_Downlink.h"
 #include "HASP2022_SDCard.h"
+#include "HASP2022_Temp.h"
 
 extern long ElapsedSeconds;
 extern int DownlinkInterval;
@@ -12,8 +13,9 @@ void CheckDownlink() {
   if (((ElapsedSeconds % DownlinkInterval) == 0) && (!CanSendDownlink))
   {
     String data = SDOpenStatus;
-    data += ByteString(FilesNum);
-    data += ByteString(PMTHits);
+    data += ByteString(FilesNum, 4);
+    data += ByteString(PMTHits, 8);
+    data += ByteString(ReadTemp(1), 4);
     data += "\n";
     
     SendDownlink(data);
@@ -31,13 +33,19 @@ void SendDownlink(String data) {
   Serial5.print(data);
 }
 
-String ByteString(int num) {
+String ByteString(int num, int bytes) {
   String numString = String(num);
   int len = numString.length();
   
-  if (len > 4)
-    return "9999";
-  for (int i = 0; i < (4 - len); i++)
+  if (len > bytes)
+  {
+    numString = "";
+    for (int i = 0; i < bytes; i++)
+      numString += "9";
+    
+    return numString;
+  }
+  for (int i = 0; i < (bytes - len); i++)
     numString = "0" + numString;
 
   return numString;

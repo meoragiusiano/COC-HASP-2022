@@ -5,6 +5,6 @@
 
 void CheckDownlink();
 void SendDownlink(String);
-String ByteString(int);
+String ByteString(int, int);
 
 #endif

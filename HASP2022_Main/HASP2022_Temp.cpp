@@ -29,7 +29,6 @@ long GetTemp(int PINS[2]) {
     R2 = ThermResistance * (1023.0 / (float)Vo - 1.0);
     logR2 = log(R2);
     T = (1.0 / (c1 + c2 * logR2 + c3 * logR2 * logR2 * logR2));
-    T = T - 273.15;
     tempSum += T;
   }
 

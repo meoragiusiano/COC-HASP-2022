@@ -43,13 +43,11 @@ void WriteDataFile(String data) {
     data.toCharArray(buff, dataLength);
     buff[dataLength - 1] = '\0';
     CurrFile.write(buff);
-
-    CurrFile.write("\t- ");
-
+    CurrFile.write("\t");
     timeStr.toCharArray(buff, timeLength);
     buff[timeLength - 1] = '\0';
     CurrFile.write(buff);
-    CurrFile.write(" sec\n");
+    CurrFile.write("\n");
   }
   else
   {
@@ -86,7 +84,7 @@ void OpenDataFile() {
       String fileNumStr = String(FilesNum);
       fileNumStr.toCharArray(buff, fileNumStr.length() + 1);
       CurrFile.write(buff);
-      CurrFile.write(" --------\n---- (PMT Digital, PMT Analog, Temperature Inside, Temperature Outside, Timestamp) ----\n\n");
+      CurrFile.write(" --------\n---- (PMT Digital, PMT Analog, Temperature Inside, Temperature Outside, Timestamp (seconds)) ----\n\n");
       CurrLines = 0;
       NeedNewFile = false;
       
