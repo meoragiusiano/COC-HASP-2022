@@ -13,11 +13,14 @@ void CheckDownlink() {
   if (((ElapsedSeconds % DownlinkInterval) == 0) && (!CanSendDownlink))
   {
     String data = SDOpenStatus;
+    data += ", ";
     data += ByteString(FilesNum, 4);
+    data += ", ";
     data += ByteString(PMTHits, 8);
+    data += ", ";
     data += ByteString(ReadTemp(1), 4);
     data += "\n";
-    
+
     SendDownlink(data);
     PMTHits = 0;
     CanSendDownlink = true;
@@ -36,13 +39,13 @@ void SendDownlink(String data) {
 String ByteString(int num, int bytes) {
   String numString = String(num);
   int len = numString.length();
-  
+
   if (len > bytes)
   {
     numString = "";
     for (int i = 0; i < bytes; i++)
       numString += "9";
-    
+
     return numString;
   }
   for (int i = 0; i < (bytes - len); i++)
