@@ -17,7 +17,7 @@ bool DeleteFiles = false;
 //FALSE (DEFAULT) - Upon attempting to create a new data file, program will not check whether there already is a file with the same name on the SD card
 //TRUE - Upon attempting to create a new data file, program will check whether there is already a file with the same name on the SD card, and will attempt to delete it if it's present prior to creating the new file
 int LineLimit = 1000000;
-int DownlinkInterval = 60;
+int DownlinkInterval = 5;
 int TimeOffset = 0;
 String FileName = "COC_HASP2022_DataFile_";
 String FileExt = ".txt";
@@ -35,7 +35,7 @@ bool CanSendDownlink = false;
 
 void setup() {
   Serial.begin(9600);
-  Serial5.begin(9600);
+  Serial5.begin(4800);
   pinMode(PIN_CS, OUTPUT);
   pinMode(PIN_PMT, INPUT);
   for (int i = 0; i < 2; i++)
