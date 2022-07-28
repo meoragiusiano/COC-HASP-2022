@@ -7,8 +7,8 @@
 
 int PIN_CS = BUILTIN_SDCARD;
 int PIN_PMT = 20;
-int PINS_TEMP_INSIDE[] = {22, 23};
-int PINS_TEMP_OUTSIDE[] = {35, 36};
+int PINS_TEMP_INSIDE[] = {35, 36};
+int PINS_TEMP_OUTSIDE[] = {22, 23};
 
 bool CheckSDInitially = true;
 //FALSE - At the start, program will only try to open the SD card once
