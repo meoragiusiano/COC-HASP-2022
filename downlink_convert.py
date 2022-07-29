@@ -28,7 +28,7 @@ size = len(df)
 while col <= 4:
     t_col = df[col]    #internal = 3, external = 4
     while(i < size):
-        Vo = t_col[i]
+        Vo = float(t_col[i])
         R2 = R1 * (1023.0 / (Vo - 1.0))
         logR2 = math.log(R2)
         t_kelvin = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2))
@@ -61,8 +61,3 @@ if not files_present:
 #check
 print(df)
 print("done")
-
-
-
-
-
