@@ -42,7 +42,6 @@ while j < size:
     ext_temp = df[4][j]
     int_temp = df[3][j]
     diff = ext_temp - int_temp
-    #df[6] = diff
     df.loc[j, 6] = diff
     j += 1
 
