@@ -20,7 +20,7 @@ void CheckDownlink() {
     data += ", ";
     data += ByteString(ReadTemp(0), 4);
     data += ", ";
-    data += ByteString(ReadTemp(1), 4);
+    data += ByteString(ReadTemp(2), 4);
     data += ", ";
     data += ByteString(ElapsedSeconds, 5);
     data += "\n";

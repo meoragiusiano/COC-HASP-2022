@@ -4,6 +4,6 @@
 #include "Arduino.h"
 
 long ReadTemp(int);
-long GetTemp(int[2]);
+long GetTemp(int);
 
 #endif

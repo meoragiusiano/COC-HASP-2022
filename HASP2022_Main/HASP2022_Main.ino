@@ -66,6 +66,10 @@ void loop() {
     data += String(ReadTemp(0));
     data += "\t";
     data += String(ReadTemp(1));
+    data += "\t";
+    data += String(ReadTemp(2));
+    data += "\t";
+    data += String(ReadTemp(3));
     SaveData(data);
   }
   if (PMTHitDigital == 1)
